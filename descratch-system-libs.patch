@@ -1,0 +1,11 @@
+--- descratch-R4/meson.build.orig	2026-04-08 13:04:05.000000000 +0200
++++ descratch-R4/meson.build	2026-11-21 21:36:26.179914965 +0100
+@@ -6,7 +6,7 @@ project('DeScratch', 'cpp',
+     version: '4.0',
+ )
+ 
+-incdir = include_directories('vapoursynth/include', 'AviSynthPlus/avs_core/include')
++incdir = include_directories('/usr/include/vapoursynth', '/usr/include/avisynth')
+ 
+ py = import('python').find_installation(pure: false)
+ 

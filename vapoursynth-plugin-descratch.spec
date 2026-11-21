@@ -1,18 +1,22 @@
 Summary:	DeScratch - Scratches Removing Filter
 Summary(pl.UTF-8):	DeScratch - filtr usuwający zarysowania
 Name:		vapoursynth-plugin-descratch
-Version:	3
+Version:	4
 Release:	1
 License:	GPL v2
 Group:		Libraries
+#Source0Download: https://github.com/vapoursynth/descratch/releases
 Source0:	https://github.com/vapoursynth/descratch/archive/R%{version}/descratch-R%{version}.tar.gz
-# Source0-md5:	f0a9f840689670169507a65b13fd0e1a
+# Source0-md5:	5369093f30b27811860f7df30d50b742
+Patch0:		descratch-system-libs.patch
 URL:		https://github.com/vapoursynth/descratch
 BuildRequires:	AviSynthPlus-devel
-BuildRequires:	libstdc++-devel
-BuildRequires:	libtool >= 2:1.5
-BuildRequires:	vapoursynth-devel >= 55
-Requires:	vapoursynth >= 55
+BuildRequires:	libstdc++-devel >= 6:7
+BuildRequires:	meson >= 1.2.3
+BuildRequires:	ninja >= 1.5
+BuildRequires:	python3 >= 1:3.12
+BuildRequires:	vapoursynth-devel >= 77
+Requires:	vapoursynth >= 77
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -23,23 +27,22 @@ Ta wtyczka usuwa pionowe zarysowania ze zdigitalizowanych filmów.
 
 %prep
 %setup -q -n descratch-R%{version}
+%patch -P0 -p1
 
 %build
-libtool --tag=CXX --mode=compile %{__cxx} -c -o src/descratch.lo %{rpmcxxflags} %{rpmcppflags} $(pkg-config --cflags vapoursynth avisynth) src/descratch.cpp
-libtool --tag=CXX --mode=link %{__cxx} -shared -module -avoid-version -o src/libdescratch.la %{rpmldflags} %{rpmcflags} src/descratch.lo -rpath %{_libdir}/vapoursynth
+%meson
+
+%meson_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_libdir}/vapoursynth
 
-libtool --mode=install install src/libdescratch.la $RPM_BUILD_ROOT%{_libdir}/vapoursynth
-
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/vapoursynth/libdescratch.la
+%meson_install
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc doc/{descratch.html,*.jpg}
-%attr(755,root,root) %{_libdir}/vapoursynth/libdescratch.so
+%doc README.md doc/{descratch.html,*.jpg}
+%{py3_sitedir}/vapoursynth/plugins/descratch.so
