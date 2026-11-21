@@ -15,6 +15,7 @@ BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	meson >= 1.2.3
 BuildRequires:	ninja >= 1.5
 BuildRequires:	python3 >= 1:3.12
+BuildRequires:	rpmbuild(macros) >= 2.042
 BuildRequires:	vapoursynth-devel >= 77
 Requires:	vapoursynth >= 77
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
